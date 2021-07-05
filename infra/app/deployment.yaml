@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: produto-api
+  labels:
+    app: produto-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: produto-api
+  template:
+    metadata:
+      labels:
+        app: produto-api
+    spec:
+      containers:
+        - name: produto-api
+          image: produto-api:v1
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8081
+          env:
+            - name: POSTGRES_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configmap
+                  key: database_url
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configmap
+                  key: database_user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configmap
+                  key: database_password
